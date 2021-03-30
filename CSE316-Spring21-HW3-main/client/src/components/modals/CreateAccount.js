@@ -43,11 +43,11 @@ const CreateAccount = (props) => {
 	return (
         // Replace div with WModal
 
-		<div className="signup-modal">
-			<div className="modal-header" onClose={() => props.setShowCreate(false)}>
+		<WModal className="signup-modal" visible = {true}>
+			<WMHeader className="modal-header" onClose={() => props.setShowCreate(false)}>
 				Sign Up
-			</div>
-
+			</WMHeader>
+			<WMMain>
 			{
 				loading ? <div />
 					: <div>
@@ -78,10 +78,11 @@ const CreateAccount = (props) => {
 						/>
 					</div>
 			}
+			</WMMain>
 			<WButton className="modal-button" onClick={handleCreateAccount} span clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
 				Submit
 			</WButton>
-		</div>
+		</WModal>
 	);
 }
 
