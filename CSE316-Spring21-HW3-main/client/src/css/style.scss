@@ -186,9 +186,16 @@ html, body {
 }
 
 .undo-redo {
-    color: $text-color;
+    color: black;
 }
 
+#redo {
+    pointer-events: none;
+}
+
+#undo {
+    pointer-events: none;
+}
 .table-entry-buttons {
     color: $text-color;
 }

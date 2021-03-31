@@ -209,8 +209,9 @@ export class jsTPS {
 			retVal = await transaction.doTransaction();
 			this.mostRecentTransaction++;
 			this.performingDo = false;
-            
         }
+        this.peekDo();
+        this.peekUndo();
         console.log('transactions: ' + this.getSize());
         console.log('redo transactions:' + this.getRedoSize());
         console.log('undo transactions:' + this.getUndoSize());
@@ -227,9 +228,13 @@ export class jsTPS {
      */
     peekUndo() {
         if (this.hasTransactionToUndo()) {
+            document.getElementById("undo").style.color = 'white';
+            document.getElementById("undo").style.pointerEvents = 'auto';
             return this.transactions[this.mostRecentTransaction];
         }
         else
+            document.getElementById("undo").style.color = 'black';
+            document.getElementById("undo").style.pointerEvents = 'none';
             return null;
     }
     
@@ -242,9 +247,14 @@ export class jsTPS {
      */    
     peekDo() {
         if (this.hasTransactionToRedo()) {
+            document.getElementById("redo").style.color = 'white';
+            document.getElementById("redo").style.pointerEvents = 'auto';
             return this.transactions[this.mostRecentTransaction+1];
         }
-        else
+        else{
+            document.getElementById("redo").style.color = 'black';
+            document.getElementById("redo").style.pointerEvents = 'none';
+        }
             return null;
     }
 
@@ -261,6 +271,8 @@ export class jsTPS {
             this.mostRecentTransaction--;
 			this.performingUndo = false;
         }
+        this.peekDo();
+        this.peekUndo();
         console.log('transactions: ' + this.getSize());
         console.log('redo transactions:' + this.getRedoSize());
         console.log('undo transactions:' + this.getUndoSize());
@@ -279,7 +291,9 @@ export class jsTPS {
         
         // MAKE SURE TO RESET THE LOCATION OF THE
         // TOP OF THE TPS STACK TOO
-        this.mostRecentTransaction = -1;        
+        this.mostRecentTransaction = -1;  
+        this.peekDo();
+        this.peekUndo();     
     }
     
     /**
