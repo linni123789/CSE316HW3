@@ -163,6 +163,70 @@ module.exports = {
 			listItems = found.items;
 			return (found.items);
 
+		},
+
+		sortingItems: async(_, args) => {
+			const { _id, field} = args;
+			const found = await Todolist.findOne({_id: _id});
+			let listItems = [...found.items]
+			let reverseSort = true;
+			if (field === "task"){
+				for (var i = 0 ; i < found.items.length-1 ; i++){
+					if (found.items[i].description > found.items[i+1].description)
+						reverseSort = false;
+				}
+				if (reverseSort){
+					listItems.sort((a,b) => a.description <= b.description ? 1 : -1);
+				}
+				else{
+					listItems.sort((a,b) => a.description >= b.description ? 1 : -1)
+				}
+			}
+			if (field === "assigned"){
+				console.log("asdasd")
+				for (var i = 0 ; i < found.items.length-1 ; i++){
+					if (found.items[i].assigned_to > found.items[i+1].assigned_to)
+						reverseSort = false;
+				}
+				if (reverseSort){
+					listItems.sort((a,b) => a.assigned_to <= b.assigned_to ? 1 : -1);
+				}
+				else{
+					listItems.sort((a,b) => a.assigned_to >= b.assigned_to ? 1 : -1)
+				}
+			}
+			if (field === "due_date"){
+				for (var i = 0 ; i < found.items.length-1 ; i++){
+					if (found.items[i].due_date > found.items[i+1].due_date)
+						reverseSort = false;
+				}
+				console.log(reverseSort)
+				if (reverseSort){
+					listItems.sort((a,b) => a.due_date <= b.due_date? 1 : -1);
+				}
+				else{
+					listItems.sort((a,b) => a.due_date >= b.due_date ? 1 : -1)
+				}
+			}
+
+			if (field === "status"){
+				for (var i = 0 ; i < found.items.length-1 ; i++){
+					if (found.items[i].status > found.items[i+1].status)
+						reverseSort = false;
+				}
+				if (reverseSort){
+					listItems.sort((a,b) => a.status <= b.status ? 1 : -1)
+				}
+				else{
+					listItems.sort((a,b) => a.status >= b.status ? 1 : -1)
+				}
+			}
+
+			const updated = await Todolist.updateOne({_id: _id}, { items: listItems})
+			if(updated) return (listItems);
+			// return old ordering if reorder was unsuccessful
+			listItems = found.items;
+			return (found.items);
 		}
 
 	}

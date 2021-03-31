@@ -11,6 +11,7 @@ const TableEntry = (props) => {
     const status = data.completed ? 'complete' : 'incomplete';
     const [editingDate, toggleDateEdit] = useState(false);
     const [editingDescr, toggleDescrEdit] = useState(false);
+    const [editingAssign, toggleAssignEdit] = useState(false);
     const [editingStatus, toggleStatusEdit] = useState(false);
     const assigned = data.assigned_to;
     const assigncolor = data.completed ? {color : 'black'} : {color : 'red'};
@@ -31,10 +32,18 @@ const TableEntry = (props) => {
 
     const handleStatusEdit = (e) => {
         toggleStatusEdit(false);
+        console.log(e.target.value)
         const newStatus = e.target.value ? e.target.value : false;
         const prevStatus = status;
         props.editItem(data._id, 'completed', newStatus, prevStatus);
     };
+
+    const handleAssignEdit = (e) => {
+        toggleAssignEdit(false);
+        const newAssign = e.target.value ? e.target.value : "No Assign";
+        const prevAssign = assigned
+        props.editItem(data._id, 'assigned_to', newAssign, prevAssign)
+    }
 
     return (
         <WRow className='table-entry'>
@@ -50,14 +59,6 @@ const TableEntry = (props) => {
                             onClick={() => toggleDescrEdit(!editingDescr)}
                         >{description}
                         </div>
-                }
-            </WCol>
-
-            <WCol size="2">
-                {                
-                    <div style = {assigncolor}>
-                    {assigned}
-                    </div>
                 }
             </WCol>
             
@@ -87,6 +88,21 @@ const TableEntry = (props) => {
                         : <div onClick={() => toggleStatusEdit(!editingStatus)} className={`${completeStyle} table-text`}>
                             {status}
                         </div>
+                }
+            </WCol>
+
+            <WCol size="2">
+                {              
+                    editingAssign || assigned === ''
+                    ? <WInput
+                        className='table-input' onBlur={handleAssignEdit}
+                        autoFocus={true} defaultValue={assigned} type='text'
+                        wType="outlined" barAnimation="solid" inputClass="table-input-class"
+                    />
+                    : <div style = {assigncolor} className="table-text"
+                        onClick={() => toggleAssignEdit(!editingAssign)}
+                    >{assigned}
+                    </div>
                 }
             </WCol>
 
