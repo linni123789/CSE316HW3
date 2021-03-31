@@ -23,6 +23,7 @@ export const REGISTER = gql`
 		}
 	}
 `;
+
 export const LOGOUT = gql`
 	mutation Logout {
 		logout 
@@ -102,5 +103,11 @@ export const SORTING_ITEMS = gql`
 			assigned_to
 			completed
 		}
+	}
+`;
+
+export const SET_TOP = gql`
+	mutation SetTop($_id: String!){
+		setTop(_id: $_id)
 	}
 `;

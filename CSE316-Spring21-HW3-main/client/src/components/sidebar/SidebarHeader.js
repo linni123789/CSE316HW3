@@ -13,14 +13,8 @@ const SidebarHeader = (props) => {
             <WCol size="5">
                 {
                     props.auth && <div className="sidebar-options">
-                        <WButton className="sidebar-buttons" onClick={props.createNewList} clickAnimation="ripple-light" shape="rounded" color="primary">
+                        <WButton className="sidebar-buttons" id = "add" onClick={props.createNewList} clickAnimation="ripple-light" shape="rounded" color="primary">
                             <i className="material-icons">add</i>
-                        </WButton>
-                        <WButton className="sidebar-buttons undo-redo" id ="undo" onClick={props.undo} wType="texted" clickAnimation="ripple-light" shape="rounded">
-                            <i className="material-icons" >undo</i>
-                        </WButton>
-                        <WButton className="sidebar-buttons undo-redo" id = "redo" onClick={props.redo} wType="texted" clickAnimation="ripple-light" shape="rounded">
-                            <i className="material-icons">redo</i>
                         </WButton>
                     </div>
                 }

@@ -4,7 +4,7 @@ import { WNavItem, WInput } from 'wt-frontend';
 const SidebarEntry = (props) => {
     const [editing, toggleEditing] = useState(false);
     const [preEdit, setPreEdit] = useState(props.name);
-
+    const yellow = props.yellow ? {color : 'yellow'} : {color : '#e9edf0'}
     const handleEditing = (e) => {
         e.stopPropagation();
         setPreEdit(props.name);
@@ -26,7 +26,7 @@ const SidebarEntry = (props) => {
         >
             {
                 editing ? <WInput className="list-item-edit" inputClass="list-item-edit-input" wType="lined" barAnimation="solid" name='name' onBlur={handleSubmit} autoFocus={true} defaultValue={props.name} />
-                    :   <div className='list-text'>
+                    :   <div className='list-text' style = {yellow} >
                             {props.name}
                         </div>
             }

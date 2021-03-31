@@ -15,6 +15,8 @@ const TableEntry = (props) => {
     const [editingStatus, toggleStatusEdit] = useState(false);
     const assigned = data.assigned_to;
     const assigncolor = data.completed ? {color : 'black'} : {color : 'red'};
+    const upblack = props.upblack ? {color : 'black', PointerEvent : 'none'} : {color: '#e9edf0'};
+    const downblack = props.downblack ? {color : 'black', PointerEvent : 'none'} : {color: '#e9edf0'};
 
     const handleDateEdit = (e) => {
         toggleDateEdit(false);
@@ -108,10 +110,10 @@ const TableEntry = (props) => {
 
             <WCol size="2">
                 <div className='button-group'>
-                    <WButton className="table-entry-buttons" onClick={() => props.reorderItem(data._id, -1)} wType="texted">
+                    <WButton className="table-entry-buttons" style = {upblack} onClick={() => props.reorderItem(data._id, -1)} wType="texted">
                         <i className="material-icons">expand_less</i>
                     </WButton>
-                    <WButton className="table-entry-buttons" onClick={() => props.reorderItem(data._id, 1)} wType="texted">
+                    <WButton className="table-entry-buttons" style = {downblack} onClick={() => props.reorderItem(data._id, 1)} wType="texted">
                         <i className="material-icons">expand_more</i>
                     </WButton>
                     <WButton className="table-entry-buttons" onClick={() => props.deleteItem(data)} wType="texted">

@@ -35,7 +35,7 @@ const Homescreen = (props) => {
 	const [AddTodolist] 			= useMutation(mutations.ADD_TODOLIST);
 	const [AddTodoItem] 			= useMutation(mutations.ADD_ITEM);
 	const [SortItem] 				= useMutation(mutations.SORTING_ITEMS);
-
+	const [SetOnTop]				= useMutation(mutations.SET_TOP);
 
 	const { loading, error, data, refetch } = useQuery(GET_DB_TODOS);
 	if(loading) { console.log(loading, 'loading'); }
@@ -148,6 +148,8 @@ const Homescreen = (props) => {
 		refetch();
 		setActiveList({});
 		props.tps.clearAllTransactions();
+		document.getElementById("add").style.backgroundColor = "#ffc800";
+		document.getElementById("add").style.pointerEvent = "auto";
 	};
 
 	const updateListField = async (_id, field, value, prev) => {
@@ -160,9 +162,15 @@ const Homescreen = (props) => {
 	const handleSetActive = (id) => {
 		const todo = todolists.find(todo => todo.id === id || todo._id === id);
 		setActiveList(todo);
+		// SetOnTop({variables: {_id: todo._id}});
 		props.tps.clearAllTransactions();
+		document.getElementById("add").style.backgroundColor = "gray";
+		document.getElementById("add").style.pointerEvent = "none";
 	};
 
+	const tpsClear = () => {
+		props.tps.clearAllTransactions();
+	}
 	const sortingItems = async(field) => {
 		let listID = activeList._id;
 		let transaction = new SortItems_Transaction(listID, field, SortItem) 
@@ -239,6 +247,8 @@ const Homescreen = (props) => {
 									setShowDelete={setShowDelete}
 									activeList={activeList} setActiveList={setActiveList}
 									sortingItemsCallBack = {sortingItems}
+									clearTransaction = {tpsClear}
+									undo={tpsUndo} redo={tpsRedo} 
 								/>
 							</div>
 						:

@@ -228,6 +228,15 @@ module.exports = {
 			// return old ordering if reorder was unsuccessful
 			listItems = found.items;
 			return (found.items);
+		},
+
+		setTop: async(_, args) => {
+			const {_id} = args;
+			const found = await Todolist.findOne({_id: _id});
+			var todolists = await Todolist.find({owner : found.owner});
+			todolists.sort(function(x,y){ return x._id == _id ? -1 : y._id == _id ? 1 : 0; });
+			console.log(todolists)
+
 		}
 
 	}
