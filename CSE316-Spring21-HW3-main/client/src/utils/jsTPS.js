@@ -119,18 +119,19 @@ export class UpdateListItems_Transaction extends jsTPS_Transaction {
 }
 
 export class SortItems_Transaction extends jsTPS_Transaction {
-    constructor(listID, field, callback){
+    constructor(listID, field, callback, oldItems){
         super();
         this.listID = listID;
         this.field = field;
         this.updateFunction = callback;
+        this.oldItems = oldItems;
     }
     async doTransaction() {
         await this.updateFunction({variables: {_id: this.listID, field: this.field}});
     }
 
     async undoTransaction() {
-
+        await this.updateFunction({variables: {_id: this.listID, field: this.field}});
     }
 }
 

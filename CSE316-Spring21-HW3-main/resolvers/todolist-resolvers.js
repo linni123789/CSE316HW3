@@ -211,14 +211,15 @@ module.exports = {
 
 			if (field === "status"){
 				for (var i = 0 ; i < found.items.length-1 ; i++){
-					if (found.items[i].status > found.items[i+1].status)
+					if (found.items[i].completed > found.items[i+1].completed)
 						reverseSort = false;
 				}
+				console.log(found.items)
 				if (reverseSort){
-					listItems.sort((a,b) => a.status <= b.status ? 1 : -1)
+					listItems.sort((a,b) => a.completed <= b.completed ? 1 : -1)
 				}
 				else{
-					listItems.sort((a,b) => a.status >= b.status ? 1 : -1)
+					listItems.sort((a,b) => a.completed >= b.completed? 1 : -1)
 				}
 			}
 
