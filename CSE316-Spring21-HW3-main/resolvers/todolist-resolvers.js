@@ -41,7 +41,9 @@ module.exports = {
 			const objectId = new ObjectId();
 			const found = await Todolist.findOne({_id: listId});
 			if(!found) return ('Todolist not found');
-			item._id = objectId;
+			if(item._id === ""){
+				item._id = objectId;
+			}
 			let listItems = found.items;
 			listItems.push(item);
 			
@@ -222,7 +224,6 @@ module.exports = {
 					listItems.sort((a,b) => a.completed >= b.completed? 1 : -1)
 				}
 			}
-
 			const updated = await Todolist.updateOne({_id: _id}, { items: listItems})
 			if(updated) return (listItems);
 			// return old ordering if reorder was unsuccessful
@@ -230,13 +231,32 @@ module.exports = {
 			return (found.items);
 		},
 
+		saveList: async(_, args) => {
+			const {_id, idlist} = args;
+			const found = await Todolist.findOne({_id: _id});
+			listItems = [];
+			for (var i = 0 ; i < idlist.length ; i++){
+				for (var j = 0 ; j < found.items.length ; j++){
+					if (idlist[i] === found.items[j].id.toString()){
+						listItems.push(found.items[j]);
+					}
+				}
+			}
+			const updated = await Todolist.updateOne({_id: _id}, { items: listItems})
+			return true;
+		},
+
 		setTop: async(_, args) => {
 			const {_id} = args;
 			const found = await Todolist.findOne({_id: _id});
 			var todolists = await Todolist.find({owner : found.owner});
 			todolists.sort(function(x,y){ return x._id == _id ? -1 : y._id == _id ? 1 : 0; });
-			console.log(todolists)
-
+			// const deleted = await Todolist.deleteOne({_id: objectId});
+			for (var i = 0 ; i < todolists.length ; i++){
+				Todolist.insert(todolists[i]);
+			}
+			// console.log(Todolist.find().sort({id : -1}))
+			return true;
 		}
 
 	}

@@ -36,6 +36,7 @@ const Homescreen = (props) => {
 	const [AddTodoItem] 			= useMutation(mutations.ADD_ITEM);
 	const [SortItem] 				= useMutation(mutations.SORTING_ITEMS);
 	const [SetOnTop]				= useMutation(mutations.SET_TOP);
+	const[SaveList]                 = useMutation(mutations.SAVE_LIST);
 
 	const { loading, error, data, refetch } = useQuery(GET_DB_TODOS);
 	if(loading) { console.log(loading, 'loading'); }
@@ -150,6 +151,7 @@ const Homescreen = (props) => {
 		props.tps.clearAllTransactions();
 		document.getElementById("add").style.backgroundColor = "#ffc800";
 		document.getElementById("add").style.pointerEvent = "auto";
+		disablecol();
 	};
 
 	const updateListField = async (_id, field, value, prev) => {
@@ -162,22 +164,52 @@ const Homescreen = (props) => {
 	const handleSetActive = (id) => {
 		const todo = todolists.find(todo => todo.id === id || todo._id === id);
 		setActiveList(todo);
-		// SetOnTop({variables: {_id: todo._id}});
+		let listID = todo._id;
+		// SetOnTop({variables: {_id: listID}})
 		props.tps.clearAllTransactions();
 		document.getElementById("add").style.backgroundColor = "gray";
 		document.getElementById("add").style.pointerEvent = "none";
+		enablecol();
 	};
 
 	const tpsClear = () => {
 		props.tps.clearAllTransactions();
+		disablecol();
 	}
 	const sortingItems = async(field) => {
 		let listID = activeList._id;
-		let transaction = new SortItems_Transaction(listID, field, SortItem) 
+		let idlist = [];
+		const { loading, error, data } = await refetch();
+		let itemlist;
+		if (data) {
+			todolists = data.getAllTodos;
+			if (activeList._id) {
+				let tempID = activeList._id;
+				itemlist = todolists.find(list => list._id === tempID);
+			}
+		}
+		for (var i = 0 ; i < itemlist.items.length ; i++){
+			idlist.push(itemlist.items[i].id.toString());
+		}
+		console.log(idlist)
+		let transaction = new SortItems_Transaction(listID, field, idlist, SortItem, SaveList)
 		props.tps.addTransaction(transaction)
 		tpsRedo();
 	}
 
+	const disablecol = () =>{
+		document.getElementById("taskchange").style.pointerEvents = "none";
+		document.getElementById("statuschange").style.pointerEvents = "none";
+		document.getElementById("datechange").style.pointerEvents = "none";
+		document.getElementById("assignedchange").style.pointerEvents = "none"
+	}
+
+	const enablecol = () =>{
+		document.getElementById("taskchange").style.pointerEvents = "auto";
+		document.getElementById("statuschange").style.pointerEvents = "auto";
+		document.getElementById("datechange").style.pointerEvents = "auto";
+		document.getElementById("assignedchange").style.pointerEvents = "auto"
+	}
 	
 	/*
 		Since we only have 3 modals, this sort of hardcoding isnt an issue, if there

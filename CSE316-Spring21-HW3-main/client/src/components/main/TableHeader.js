@@ -17,20 +17,20 @@ const TableHeader = (props) => {
     return (
         <WRow className="table-header">
             <WCol size="3">
-                <WButton className='table-header-section' wType="texted" onClick = {(e) => props.sortingItemsCallBack("task")} >Task</WButton>
+                <WButton className='table-header-section' id = "taskchange" wType="texted" onClick = {(e) => props.sortingItemsCallBack("task")} >Task</WButton>
             </WCol>
 
             <WCol size="2">
-                <WButton className='table-header-section' wType="texted" onClick = {(e) => props.sortingItemsCallBack("due_date")}>Due Date</WButton>
+                <WButton className='table-header-section' id = "datechange" wType="texted" onClick = {(e) => props.sortingItemsCallBack("due_date")}>Due Date</WButton>
             </WCol>
 
             <WCol size="2">
-                <WButton className='table-header-section' wType="texted" onClick = {(e) => props.sortingItemsCallBack("status")}>Status</WButton>
+                <WButton className='table-header-section' id = "statuschange" wType="texted" onClick = {(e) => props.sortingItemsCallBack("status")}>Status</WButton>
             </WCol>
 
             
             <WCol size="2">
-            <WButton className='table-header-section' wType="texted" onClick = {(e) => props.sortingItemsCallBack("assigned")}>Assigned to</WButton>
+            <WButton className='table-header-section' id = "assignedchange" wType="texted" onClick = {(e) => props.sortingItemsCallBack("assigned")}>Assigned to</WButton>
             </WCol>
 
 

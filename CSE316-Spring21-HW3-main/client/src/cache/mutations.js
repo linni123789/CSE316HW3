@@ -81,6 +81,13 @@ export const ADD_TODOLIST = gql`
 	}
 `;
 
+export const SAVE_LIST = gql`
+	mutation SaveList($_id: String!, $idlist: [String]){
+		saveList(_id: $_id, idlist: $idlist)
+	}
+`;
+
+
 export const DELETE_TODOLIST = gql`
 	mutation DeleteTodolist($_id: String!) {
 		deleteTodolist(_id: $_id)

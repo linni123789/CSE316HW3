@@ -15,8 +15,8 @@ const TableEntry = (props) => {
     const [editingStatus, toggleStatusEdit] = useState(false);
     const assigned = data.assigned_to;
     const assigncolor = data.completed ? {color : 'black'} : {color : 'red'};
-    const upblack = props.upblack ? {color : 'black', PointerEvent : 'none'} : {color: '#e9edf0'};
-    const downblack = props.downblack ? {color : 'black', PointerEvent : 'none'} : {color: '#e9edf0'};
+    const upblack = props.upblack ? {color : 'black', pointerEvents : 'none'} : {color: '#e9edf0'};
+    const downblack = props.downblack ? {color : 'black', pointerEvents : 'none'} : {color: '#e9edf0'};
 
     const handleDateEdit = (e) => {
         toggleDateEdit(false);
