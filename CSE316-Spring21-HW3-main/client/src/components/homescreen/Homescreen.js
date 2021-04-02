@@ -37,7 +37,7 @@ const Homescreen = (props) => {
 	const [SortItem] 				= useMutation(mutations.SORTING_ITEMS);
 	const [SetOnTop]				= useMutation(mutations.SET_TOP);
 	const[SaveList]                 = useMutation(mutations.SAVE_LIST);
-
+	
 	const { loading, error, data, refetch } = useQuery(GET_DB_TODOS);
 	if(loading) { console.log(loading, 'loading'); }
 	if(error) { console.log(error, 'error'); }
@@ -165,7 +165,8 @@ const Homescreen = (props) => {
 		const todo = todolists.find(todo => todo.id === id || todo._id === id);
 		setActiveList(todo);
 		let listID = todo._id;
-		// SetOnTop({variables: {_id: listID}})
+		SetOnTop({variables: {_id: listID},refetchQueries: [{ query: GET_DB_TODOS }] })
+		refetch();
 		props.tps.clearAllTransactions();
 		document.getElementById("add").style.backgroundColor = "gray";
 		document.getElementById("add").style.pointerEvent = "none";
@@ -210,7 +211,7 @@ const Homescreen = (props) => {
 		document.getElementById("datechange").style.pointerEvents = "auto";
 		document.getElementById("assignedchange").style.pointerEvents = "auto"
 	}
-	
+
 	/*
 		Since we only have 3 modals, this sort of hardcoding isnt an issue, if there
 		were more it would probably make sense to make a general modal component, and

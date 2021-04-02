@@ -248,14 +248,17 @@ module.exports = {
 
 		setTop: async(_, args) => {
 			const {_id} = args;
-			const found = await Todolist.findOne({_id: _id});
-			var todolists = await Todolist.find({owner : found.owner});
-			todolists.sort(function(x,y){ return x._id == _id ? -1 : y._id == _id ? 1 : 0; });
-			// const deleted = await Todolist.deleteOne({_id: objectId});
-			for (var i = 0 ; i < todolists.length ; i++){
-				Todolist.insert(todolists[i]);
-			}
-			// console.log(Todolist.find().sort({id : -1}))
+			const objectId = new ObjectId(_id);
+			const found = await Todolist.find({_id: objectId});
+			const deleted = await Todolist.deleteOne({_id: objectId});
+			const newList = new Todolist({
+				_id: objectId,
+				id: found[0].id,
+				name: found[0].name,
+				owner: found[0].owner,
+				items: found[0].items
+			})
+			const updated = newList.save();
 			return true;
 		}
 
