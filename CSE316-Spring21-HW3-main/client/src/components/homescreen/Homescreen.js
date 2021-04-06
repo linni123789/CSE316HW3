@@ -45,6 +45,26 @@ const Homescreen = (props) => {
 
 	const auth = props.user === null ? false : true;
 
+	const keyboardInput = (e) => {
+        if(e.ctrlKey && e.which === 90){
+            if(props.tps.hasTransactionToUndo()){
+                tpsUndo();
+            }
+        }
+        else if(e.ctrlKey && e.which === 89){
+            if(props.tps.hasTransactionToRedo()){
+                tpsRedo();
+            }
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener('keydown', keyboardInput, false);
+        return () => {
+            document.removeEventListener('keydown', keyboardInput, false);
+        }
+    });
+
 	const refetchTodos = async (refetch) => {
 		const { loading, error, data } = await refetch();
 		if (data) {
@@ -74,42 +94,43 @@ const Homescreen = (props) => {
 	// The return id is assigned to the item, and the item is appended
 	//  to the local cache copy of the active todolist. 
 	const addItem = async () => {
-		let list = activeList;
-		const items = list.items;
-		const lastID = items.length >= 1 ? items[items.length - 1].id + 1 : 0;
-		const newItem = {
-			_id: '',
-			id: lastID,
-			description: 'No Description',
-			due_date: 'No Date',
-			assigned_to: props.user.firstName + " " + props.user.lastName,
-			completed: false
-		};
-		let opcode = 1;
-		let itemID = newItem._id;
-		let listID = activeList._id;
-		let transaction = new UpdateListItems_Transaction(listID, itemID, newItem, opcode, AddTodoItem, DeleteTodoItem);
-		props.tps.addTransaction(transaction);
-		tpsRedo();
-	};
+        let list = activeList;
+        const items = list.items;
+        const lastID = items.length >= 1 ? items[items.length - 1].id + 1 : 0;
+        const newItem = {
+            _id: '',
+            id: lastID,
+            description: 'No Description',
+            due_date: 'No Date',
+            assigned_to: props.user.firstName + " " + props.user.lastName,
+            completed: false
+        };
+        let opcode = 1;
+        let itemID = newItem._id;
+        let listID = activeList._id;
+        let transaction = new UpdateListItems_Transaction(listID, itemID, newItem, opcode, AddTodoItem, DeleteTodoItem);
+        props.tps.addTransaction(transaction);
+        tpsRedo();
+    };
 
 
 	const deleteItem = async (item, index) => {
-		let listID = activeList._id;
-		let itemID = item._id;
-		let opcode = 0;
-		let itemToDelete = {
-			_id: item._id,
-			id: item.id,
-			description: item.description,
-			due_date: item.due_date,
-			assigned_to: item.assigned_to,
-			completed: item.completed
-		}
-		let transaction = new UpdateListItems_Transaction(listID, itemID, itemToDelete, opcode, AddTodoItem, DeleteTodoItem, index);
-		props.tps.addTransaction(transaction);
-		tpsRedo();
-	};
+        let listID = activeList._id;
+        let itemID = item._id;
+        let opcode = 0;
+        let itemToDelete = {
+            _id: item._id,
+            id: item.id,
+            description: item.description,
+            due_date: item.due_date,
+            assigned_to: item.assigned_to,
+            completed: item.completed
+        }
+		console.log(itemID);
+        let transaction = new UpdateListItems_Transaction(listID, itemID, itemToDelete, opcode, AddTodoItem, DeleteTodoItem, index);
+        props.tps.addTransaction(transaction);
+        tpsRedo();
+    };
 
 	const editItem = async (itemID, field, value, prev) => {
 		let flag = 0;
@@ -140,7 +161,12 @@ const Homescreen = (props) => {
 			items: [],
 		}
 		const { data } = await AddTodolist({ variables: { todolist: list }, refetchQueries: [{ query: GET_DB_TODOS }] });
-		setActiveList(list)
+		await refetchTodos(refetch);
+		if(data) {
+			let _id = data.addTodolist;
+			let newList = todolists.find(list => list._id === _id);
+			setActiveList(newList)
+		} 
 		props.tps.clearAllTransactions();
 	};
 

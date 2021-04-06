@@ -87,38 +87,38 @@ export class UpdateListItems_Transaction extends jsTPS_Transaction {
     constructor(listID, itemID, item, opcode, addfunc, delfunc, index = -1) {
         super();
         this.listID = listID;
-		this.itemID = itemID;
-		this.item = item;
-        this.index = index;
+        this.itemID = itemID;
+        this.item = item;
         this.addFunction = addfunc;
         this.deleteFunction = delfunc;
         this.opcode = opcode;
+        this.index = index;
     }
     async doTransaction() {
-		let data;
+        let data;
         this.opcode === 0 ? { data } = await this.deleteFunction({
-							variables: {itemId: this.itemID, _id: this.listID}})
-						  : { data } = await this.addFunction({
-							variables: {item: this.item, _id: this.listID, index: this.index}})  
-		if(this.opcode !== 0) {
-            this.item._id = this.itemID = data.addItem;
-		}
-		return data;
-    }
-    // Since delete/add are opposites, flip matching opcode
-    async undoTransaction() {
-		let data;
-        this.opcode === 1 ? { data } = await this.deleteFunction({
-							variables: {itemId: this.itemID, _id: this.listID}})
+                            variables: {itemId: this.itemID, _id: this.listID}})
                           : { data } = await this.addFunction({
-							variables: {item: this.item, _id: this.listID, index: this.index}})
-		if(this.opcode !== 1) {
+                            variables: {item: this.item, _id: this.listID, index: this.index}})
+        if(this.opcode !== 0) {
             this.item._id = this.itemID = data.addItem;
         }
-		return data;
+        return data;
+    }
+
+    // Since delete/add are opposites, flip matching opcode
+    async undoTransaction() {
+        let data;
+        this.opcode === 1 ? { data } = await this.deleteFunction({
+                            variables: {itemId: this.itemID, _id: this.listID}})
+                          : { data } = await this.addFunction({
+                            variables: {item: this.item, _id: this.listID, index: this.index}})
+        if(this.opcode !== 1) {
+            this.item._id = this.itemID = data.addItem;
+        }
+        return data;
     }
 }
-
 export class SortItems_Transaction extends jsTPS_Transaction {
     constructor(listID, field, idlist, callback, uncallback){
         super();

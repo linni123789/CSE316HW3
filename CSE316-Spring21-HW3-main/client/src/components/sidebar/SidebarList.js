@@ -8,7 +8,7 @@ const SidebarList = (props) => {
                 props.todolists &&
                 props.todolists.slice(0).reverse().map((todo, index) => (
                     <SidebarEntry
-                        yellow = {index === 0}
+                        yellow = {props.activeid === todo.id}
                         handleSetActive={props.handleSetActive} activeid={props.activeid}
                         id={todo.id} key={todo.id} name={todo.name} _id={todo._id}
                         updateListField={props.updateListField}
